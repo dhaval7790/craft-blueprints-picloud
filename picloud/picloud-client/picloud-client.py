@@ -20,14 +20,14 @@ class subinfo(info.infoclass):
 
     def setTargets(self):
         self.versionInfo.setDefaultValues(
-            tarballUrl="https://download.picloud.com/desktop/stable/picloudclient-${VERSION}.tar.xz",
+            tarballUrl="https://download.owncloud.com/desktop/stable/owncloudclient-${VERSION}.tar.xz",
             tarballInstallSrc="picloudclient-${VERSION}",
-            gitUrl="[git]https://github.com/picloud/client",
+            gitUrl="[git]https://github.com/dhaval7790/client",
         )
 
         self.description = "PiCloud Desktop Client"
         self.displayName = "PiCloud"
-        self.webpage = "https://github.com/picloud/client"
+        self.webpage = "https://github.com/dhaval7790/client"
 
     def setDependencies(self):
         self.buildDependencies["craft/craft-blueprints-picloud"] = None
