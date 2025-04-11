@@ -30,7 +30,7 @@ class subinfo(info.infoclass):
         self.webpage = "https://github.com/owncloud/client"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-picloud"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
 
@@ -74,7 +74,7 @@ class Package(CMakePackageBase):
         # TODO: fix msi generation which expects the existance of a /translation dir
         self.subinfo.options.package.moveTranslationsToBin = False
 
-        extraParam = os.environ.get("OWNCLOUD_CMAKE_PARAMETERS", "")
+        extraParam = os.environ.get("PICLOUD_CMAKE_PARAMETERS", "")
         if extraParam:
             # appending a string will convert the args to a string
             self.subinfo.options.configure.args += self.subinfo.options.configure.args
@@ -108,11 +108,11 @@ class Package(CMakePackageBase):
 
     @property
     def applicationExecutable(self):
-        return self._get_env_vars("ApplicationExecutable", "APPLICATION_EXECUTABLE", fallback="owncloud")
+        return self._get_env_vars("ApplicationExecutable", "APPLICATION_EXECUTABLE", fallback="picloud")
 
     @property
     def applicationShortname(self):
-        return self._get_env_vars("ApplicationShortname", "APPLICATION_SHORTNAME", fallback="owncloud")
+        return self._get_env_vars("ApplicationShortname", "APPLICATION_SHORTNAME", fallback="picloud")
 
     def fetch(self):
         if self.subinfo.options.dynamic.buildVfsWin:
