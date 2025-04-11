@@ -53,13 +53,13 @@ class subinfo(info.infoclass):
         self.runtimeDependencies["libs/kdsingleapplication"] = None
 
         if self.options.dynamic.buildVfsWin:
-            self.runtimeDependencies["owncloud/client-desktop-vfs-win"] = None
+            self.runtimeDependencies["picloud/client-desktop-vfs-win"] = None
 
         if self.options.dynamic.enableAppImageUpdater:
             self.runtimeDependencies["libs/libappimageupdate"] = None
 
         if self.options.dynamic.enableCrashReporter:
-            self.runtimeDependencies["owncloud/libcrashreporter-qt"] = None
+            self.runtimeDependencies["picloud/libcrashreporter-qt"] = None
             self.buildDependencies["dev-utils/breakpad"] = None
             self.buildDependencies["dev-utils/symsorter"] = None
 
