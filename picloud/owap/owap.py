@@ -11,16 +11,16 @@ import info
 
 class subinfo(info.infoclass):
     def setTargets(self):
-        self.svnTargets["master"] = "git@github.com:owncloud/client-desktop-owap.git"
+        self.svnTargets["master"] = "git@github.com:picloud/client-desktop-owap.git"
         self.defaultTarget = "master"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-picloud"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
 
         # actually a runtime dep but for now we only wan't to deploy the binary
-        self.buildDependencies["owncloud/owncloud-client"] = None
+        self.buildDependencies["picloud/picloud-client"] = None
         self.runtimeDependencies["libs/qt/qtbase"] = None
 
 
