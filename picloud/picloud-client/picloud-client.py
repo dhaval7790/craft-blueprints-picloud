@@ -27,10 +27,10 @@ class subinfo(info.infoclass):
 
         self.description = "PiCloud Desktop Client"
         self.displayName = "PiCloud"
-        self.webpage = "https://github.com/dhaval7790/client"
+        self.webpage = "https://github.com/owncloud/client"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-picloud"] = None
+        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
 
@@ -53,13 +53,13 @@ class subinfo(info.infoclass):
         self.runtimeDependencies["libs/kdsingleapplication"] = None
 
         if self.options.dynamic.buildVfsWin:
-            self.runtimeDependencies["picloud/client-desktop-vfs-win"] = None
+            self.runtimeDependencies["owncloud/client-desktop-vfs-win"] = None
 
         if self.options.dynamic.enableAppImageUpdater:
             self.runtimeDependencies["libs/libappimageupdate"] = None
 
         if self.options.dynamic.enableCrashReporter:
-            self.runtimeDependencies["picloud/libcrashreporter-qt"] = None
+            self.runtimeDependencies["owncloud/libcrashreporter-qt"] = None
             self.buildDependencies["dev-utils/breakpad"] = None
             self.buildDependencies["dev-utils/symsorter"] = None
 
@@ -74,12 +74,12 @@ class Package(CMakePackageBase):
         # TODO: fix msi generation which expects the existance of a /translation dir
         self.subinfo.options.package.moveTranslationsToBin = False
 
-        extraParam = os.environ.get("picloud_CMAKE_PARAMETERS", "")
+        extraParam = os.environ.get("OWNCLOUD_CMAKE_PARAMETERS", "")
         if extraParam:
             # appending a string will convert the args to a string
             self.subinfo.options.configure.args += self.subinfo.options.configure.args
         if self.subinfo.options.dynamic.buildVfsWin:
-            self.win_vfs_plugin = CraftPackageObject.get("picloud/client-desktop-vfs-win")
+            self.win_vfs_plugin = CraftPackageObject.get("owncloud/client-desktop-vfs-win")
             self.subinfo.options.configure.args += [f"-DVIRTUAL_FILE_SYSTEM_PLUGINS=off;suffix;{self.win_vfs_plugin.instance.sourceDir()}"]
         if self.subinfo.options.dynamic.enableCrashReporter:
             self.subinfo.options.configure.args += ["-DWITH_CRASHREPORTER=ON"]
@@ -108,11 +108,11 @@ class Package(CMakePackageBase):
 
     @property
     def applicationExecutable(self):
-        return self._get_env_vars("ApplicationExecutable", "APPLICATION_EXECUTABLE", fallback="picloud")
+        return self._get_env_vars("ApplicationExecutable", "APPLICATION_EXECUTABLE", fallback="owncloud")
 
     @property
     def applicationShortname(self):
-        return self._get_env_vars("ApplicationShortname", "APPLICATION_SHORTNAME", fallback="picloud")
+        return self._get_env_vars("ApplicationShortname", "APPLICATION_SHORTNAME", fallback="owncloud")
 
     def fetch(self):
         if self.subinfo.options.dynamic.buildVfsWin:
@@ -165,11 +165,11 @@ class Package(CMakePackageBase):
             allowError = re.compile(skipDumpPattern)
         else:
             # libs/qt6/qtbase installs .o files...
-            # executing command: /drone/src/linux-64-gcc/dev-utils/bin/symsorter --compress --compress --output /drone/src/linux-64-gcc/build/picloud/picloud-client/archive-dbg/symbols /drone/src/linux-64-gcc/qml/Qt/test/controls/objects-RelWithDebInfo/QuickControlsTestUtilsPrivate_resources_1/.rcc/qrc_qmake_Qt_test_controls.cpp.o /drone/src/linux-64-gcc/qml/Qt/test/controls/objects-RelWithDebInfo/QuickControlsTestUtilsPrivate_resources_1/.rcc/qrc_qmake_Qt_test_controls.cpp.o.debug
+            # executing command: /drone/src/linux-64-gcc/dev-utils/bin/symsorter --compress --compress --output /drone/src/linux-64-gcc/build/owncloud/owncloud-client/archive-dbg/symbols /drone/src/linux-64-gcc/qml/Qt/test/controls/objects-RelWithDebInfo/QuickControlsTestUtilsPrivate_resources_1/.rcc/qrc_qmake_Qt_test_controls.cpp.o /drone/src/linux-64-gcc/qml/Qt/test/controls/objects-RelWithDebInfo/QuickControlsTestUtilsPrivate_resources_1/.rcc/qrc_qmake_Qt_test_controls.cpp.o.debug
             #
             # Sorting debug information files
             #
-            # qrc_qmake_Qt_test_controls.cpp.o (rel, x86_64) -> /drone/src/linux-64-gcc/build/picloud/picloud-client/archive-dbg/symbols/00/0000e90000000000000000009f79900/executable
+            # qrc_qmake_Qt_test_controls.cpp.o (rel, x86_64) -> /drone/src/linux-64-gcc/build/owncloud/owncloud-client/archive-dbg/symbols/00/0000e90000000000000000009f79900/executable
             #
             # error: failed to process file qrc_qmake_Qt_test_controls.cpp.o.debug
             #
@@ -218,7 +218,7 @@ class Package(CMakePackageBase):
                 return False
         return True
 
-    def picloudVersion(self):
+    def owncloudVersion(self):
         versionFile = self.sourceDir() / "VERSION.cmake"
         if not versionFile.exists():
             CraftCore.log.warning(f"Failed to find {versionFile}")
@@ -255,7 +255,7 @@ class Package(CMakePackageBase):
         self.defines["appname"] = self.applicationExecutable
         self.defines["appimage_native_package_name"] = f'{self.applicationShortname.lower().replace("_", "-")}-client'
         self.defines["apppath"] = "Applications/KDE/" + self.applicationExecutable + ".app"
-        self.defines["company"] = "LNKASIA TECHSOL"
+        self.defines["company"] = "ownCloud GmbH"
 
         exePath = f"{self.defines['appname']}{CraftCore.compiler.executableSuffix}"
         if isinstance(self, NullsoftInstallerPackager):
@@ -271,7 +271,7 @@ class Package(CMakePackageBase):
         self.defines["pkgproj"] = self.buildDir() / "admin/osx/macosx.pkgproj"
         if CraftPackageObject.get("dev-utils/linuxdeploy-plugin-native-packages").isInstalled:
             self.defines["appimage_extra_output"] = ["native_packages"]
-        ver = self.picloudVersion()
+        ver = self.owncloudVersion()
         if ver:
             self.defines["version"] = ver
 
